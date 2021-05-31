@@ -17,9 +17,10 @@
 sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' package/base-files/files/etc/shadow
 
 # Add branches package from Lienol/openwrt/branches/21.02/package
-svn co https://github.com/Lienol/openwrt/branches/21.02/package/{lean,default-settings} package
+svn co https://github.com/Lienol/openwrt/branches/21.02/package/default-settings package
+svn co https://github.com/Lienol/openwrt/branches/21.02/package/lean/autocore package/autocore
 # Remove duplicate packages
-rm -rf package/lean/{luci-app-frpc,luci-app-frps,libtorrent-rasterbar} 2>/dev/null
+# rm -rf package/lean/{luci-app-frpc,luci-app-frps,libtorrent-rasterbar} 2>/dev/null
 # Add firewall rules
 zzz_iptables_row=$(sed -n '/iptables/=' package/default-settings/files/zzz-default-settings | head -n 1)
 zzz_iptables_tcp=$(sed -n ${zzz_iptables_row}p  package/default-settings/files/zzz-default-settings | sed 's/udp/tcp/g')
@@ -27,27 +28,27 @@ sed -i "${zzz_iptables_row}a ${zzz_iptables_tcp}" package/default-settings/files
 sed -i 's/# iptables/iptables/g' package/default-settings/files/zzz-default-settings
 # Set default language and time zone
 sed -i 's/luci.main.lang=zh_cn/luci.main.lang=auto/g' package/default-settings/files/zzz-default-settings
-#sed -i 's/zonename=Asia\/Shanghai/zonename=Asia\/Jayapura/g' package/default-settings/files/zzz-default-settings
+sed -i 's/zonename=Asia\/Shanghai/zonename=Asia\/Jakarta/g' package/default-settings/files/zzz-default-settings
 #sed -i 's/timezone=CST-8/timezone=CST-9/g' package/default-settings/files/zzz-default-settings
 # Add autocore support for armvirt
 sed -i 's/TARGET_rockchip/TARGET_rockchip\|\|TARGET_armvirt/g' package/lean/autocore/Makefile
 # Correct translation for Transmission
-sed -i 's/发送/Transmission/g' feeds/luci/applications/luci-app-transmission/po/zh_Hans/transmission.po
+# sed -i 's/发送/Transmission/g' feeds/luci/applications/luci-app-transmission/po/zh_Hans/transmission.po
 
 # Add luci-app-passwall
-svn co https://github.com/xiaorouji/openwrt-passwall/trunk package/openwrt-passwall
-rm -rf package/openwrt-passwall/{kcptun,xray-core} 2>/dev/null
+# svn co https://github.com/xiaorouji/openwrt-passwall/trunk package/openwrt-passwall
+# rm -rf package/openwrt-passwall/{kcptun,xray-core} 2>/dev/null
 
 # Add luci-app-openclash
-svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/openwrt-openclash
-pushd package/openwrt-openclash/tools/po2lmo && make && sudo make install 2>/dev/null && popd
+# svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash package/openwrt-openclash
+# pushd package/openwrt-openclash/tools/po2lmo && make && sudo make install 2>/dev/null && popd
 
 # Add luci-app-ssr-plus
-svn co https://github.com/fw876/helloworld/trunk/{luci-app-ssr-plus,shadowsocksr-libev} package/openwrt-ssrplus
-rm -rf package/openwrt-ssrplus/luci-app-ssr-plus/po/zh_Hans 2>/dev/null
+# svn co https://github.com/fw876/helloworld/trunk/{luci-app-ssr-plus,shadowsocksr-libev} package/openwrt-ssrplus
+# rm -rf package/openwrt-ssrplus/luci-app-ssr-plus/po/zh_Hans 2>/dev/null
 
 # Add luci-app-rclone
-svn co https://github.com/ElonH/Rclone-OpenWrt/trunk package/openWrt-rclone
+# svn co https://github.com/ElonH/Rclone-OpenWrt/trunk package/openWrt-rclone
 
 # Add luci-app-diskman
 svn co https://github.com/lisaac/luci-app-diskman/trunk/applications/luci-app-diskman package/openwrt-diskman/luci-app-diskman
@@ -73,7 +74,7 @@ svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/
 # Add luci-theme
 # svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-bootstrap-mod package/luci-theme-bootstrap-mod
 
-
+: '
 # ------------------------------- Start Conversion -------------------------------
 # Convert translation files zh-cn to zh_Hans
 # [CTCGFW]immortalwrt
@@ -136,3 +137,4 @@ echo -e "Convert translation files zh-cn to zh_Hans to complete. ${convert_files
 
 # ------------------------------- End conversion -------------------------------
 
+'
