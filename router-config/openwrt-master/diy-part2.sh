@@ -18,7 +18,7 @@ sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999
 
 # Add branches package from Lienol/openwrt/branches/21.02/package
 svn co https://github.com/Lienol/openwrt/branches/21.02/package/default-settings package/default-settings
-svn co https://github.com/Lienol/openwrt/branches/21.02/package/lean/autocore package/lean/autocore
+svn co https://github.com/Lienol/openwrt/branches/21.02/package/lean/{autocore,luci-lib-fs} package/lean
 # Remove duplicate packages
 # rm -rf package/lean/{luci-app-frpc,luci-app-frps,libtorrent-rasterbar} 2>/dev/null
 # Add firewall rules
