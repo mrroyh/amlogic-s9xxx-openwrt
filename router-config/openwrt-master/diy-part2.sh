@@ -74,6 +74,12 @@ svn co https://github.com/ophub/luci-app-amlogic/trunk/luci-app-amlogic package/
 # Add luci-theme
 # svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-bootstrap-mod package/luci-theme-bootstrap-mod
 
+#repair nginx-util
+sed -i 's/PKG_VERSION:=1\.5/PKG_VERSION:=1.6/g' feeds/packages/net/nginx-util/Makefile
+sed -i 's/\x27\\\\\x27; \[\[fallthrough\]\]/"\\\\\^"; break/g' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
+sed -i 's/: \[\[fallthrough\]\]/:  \/\/ \[\[fallthrough\]\]/g' feeds/packages/net/nginx-util/src/nginx-ssl-util.hpp
+sed -i 's/\[\[fallthrough\]\];/\/\* fallthrough \*\//g' feeds/packages/net/nginx-util/src/regex-pcre.hpp
+
 : '
 # ------------------------------- Start Conversion -------------------------------
 # Convert translation files zh-cn to zh_Hans
