@@ -34,7 +34,7 @@ sed -i "1i sed -i 's/ifname/device/g' /etc/config/network" package/base-files/fi
 # rm -rf package/lean/{luci-app-frpc,luci-app-frps,libtorrent-rasterbar} 2>/dev/null
 
 svn co https://github.com/Lienol/openwrt/branches/21.02/package/default-settings package/default-settings
-svn co https://github.com/Lienol/openwrt/branches/21.02/package/lean/{autocore,luci-lib-fs} package/lean
+svn co https://github.com/Lienol/openwrt/branches/21.02/package/lean/{autocore,luci-lib-fs,luci-app-flowoffload,luci-app-netdata,luci-app-wrtbwmon,luci-lib-fs} package/lean
 
 # Add firewall rules
 zzz_iptables_row=$(sed -n '/iptables/=' package/default-settings/files/zzz-default-settings | head -n 1)
