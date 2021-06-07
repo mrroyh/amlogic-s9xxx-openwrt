@@ -39,6 +39,7 @@ env:
   DELETE_ARTIFACTS: true
   RECENT_LASTEST: 3
   TZ: Asia/Jakarta
+  IGNORE_ERRORS: 1
 
 jobs:
   build:
