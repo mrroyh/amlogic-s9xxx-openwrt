@@ -173,6 +173,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-x96maxplus.bin"
             MAINLINE_UBOOT="/lib/u-boot/x96maxplus-u-boot.bin.sd.bin"
             ANDROID_UBOOT="/lib/u-boot/hk1box-bootloader.img"
+            AMLOGIC_SOC="s905x3"
             ;;
         s905x2 | x96max4g | x96max2g)
             FDTFILE="meson-g12a-x96-max.dtb"
@@ -180,6 +181,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-x96max.bin"
             MAINLINE_UBOOT="/lib/u-boot/x96max-u-boot.bin.sd.bin"
             ANDROID_UBOOT=""
+            AMLOGIC_SOC="s905x2"
             ;;
         s905x | hg680p | b860h)
             FDTFILE="meson-gxl-s905x-p212.dtb"
@@ -187,6 +189,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-p212.bin"
             MAINLINE_UBOOT=""
             ANDROID_UBOOT=""
+            AMLOGIC_SOC="s905x"
             ;;
         s905d | n1)
             FDTFILE="meson-gxl-s905d-phicomm-n1.dtb"
@@ -194,6 +197,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-n1.bin"
             MAINLINE_UBOOT=""
             ANDROID_UBOOT="/lib/u-boot/u-boot-2015-phicomm-n1.bin"
+            AMLOGIC_SOC="s905d"
             ;;
         s912 | h96proplus | octopus)
             FDTFILE="meson-gxm-octopus-planet.dtb"
@@ -201,6 +205,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-zyxq.bin"
             MAINLINE_UBOOT=""
             ANDROID_UBOOT=""
+            AMLOGIC_SOC="s912"
             ;;
         s922x | belink | belinkpro | ugoos)
             FDTFILE="meson-g12b-gtking-pro.dtb"
@@ -208,6 +213,7 @@ refactor_files() {
             UBOOT_OVERLOAD="u-boot-gtkingpro.bin"
             MAINLINE_UBOOT="/lib/u-boot/gtkingpro-u-boot.bin.sd.bin"
             ANDROID_UBOOT=""
+            AMLOGIC_SOC="s922x"
             ;;
         *)
             die "Have no this firmware: [ ${build_op} - ${kernel} ]"
@@ -247,32 +253,29 @@ refactor_files() {
     [ -f etc/modules.d/usb-net-rtl8152 ] || echo "r8152" > etc/modules.d/usb-net-rtl8152
     [ -f etc/modules.d/usb-net-asix-ax88179 ] || echo "ax88179_178a" > etc/modules.d/usb-net-asix-ax88179
 
-    # Add firmware information to the openwrt-env
-    echo "FDTFILE='${FDTFILE}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "U_BOOT_EXT='${U_BOOT_EXT}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "UBOOT_OVERLOAD='${UBOOT_OVERLOAD}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "MAINLINE_UBOOT='${MAINLINE_UBOOT}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "ANDROID_UBOOT='${ANDROID_UBOOT}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "AMLOGIC_SOC='${build_op}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "KERNEL_VERSION='${build_usekernel}'" >> lib/u-boot/openwrt-env 2>/dev/null
-    echo "K510='${K510}'" >> lib/u-boot/openwrt-env 2>/dev/null
+    # Add firmware information to the etc/flippy-openwrt-release
+    echo "FDTFILE='${FDTFILE}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "U_BOOT_EXT='${U_BOOT_EXT}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "UBOOT_OVERLOAD='${UBOOT_OVERLOAD}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "MAINLINE_UBOOT='${MAINLINE_UBOOT}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "ANDROID_UBOOT='${ANDROID_UBOOT}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "KERNEL_VERSION='${build_usekernel}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "SOC='${AMLOGIC_SOC}'" >> etc/flippy-openwrt-release 2>/dev/null
+    echo "K510='${K510}'" >> etc/flippy-openwrt-release 2>/dev/null
+    # Compatible with the old version
+    ln -sf etc/flippy-openwrt-release lib/u-boot/openwrt-env 2>/dev/null
 
     # Add firmware version information to the terminal page
     if  [ -f etc/banner ]; then
         op_version=$(echo $(ls lib/modules/ 2>/dev/null ))
         op_packaged_date=$(date +%Y-%m-%d)
-        echo " Amlogic SoC: ${build_op}" >> etc/banner
-        echo " Kernel: ${op_version}" >> etc/banner
-        if  [ "${K510}" -eq "1" ]; then
-            echo " Support install to EMMC: No" >> etc/banner
-        else
-            echo " Support install to EMMC: Yes" >> etc/banner
-        fi
         echo " Install command: openwrt-install" >> etc/banner
         echo " Update command: openwrt-update" >> etc/banner
         echo " Replace kernel command: openwrt-kernel" >> etc/banner
         echo " Backup & Restore command: openwrt-backup" >> etc/banner
-        echo " View version command: openwrt-version" >> etc/banner
+        echo " -----------------------------------------------------" >> etc/banner
+        echo " Amlogic SoC: ${build_op}" >> etc/banner
+        echo " OpenWrt Kernel: ${op_version}" >> etc/banner
         echo " Packaged Date: ${op_packaged_date}" >> etc/banner
         echo " -----------------------------------------------------" >> etc/banner
     fi
